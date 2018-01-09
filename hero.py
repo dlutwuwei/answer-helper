@@ -1,30 +1,37 @@
 import urllib.request, sys,base64,json,os,time,pyperclip,baiduSearch
 from PIL import Image
+from os.path import isfile, join, abspath, dirname
+
+root_path = dirname(abspath(__file__))
+print(root_path)
 
 start = time.time()
 os.system("adb shell /system/bin/screencap -p /sdcard/screenshot.png") 
-os.system("adb pull /sdcard/screenshot.png ~/images/screenshot.png")  
+os.system("adb pull /sdcard/screenshot.png " + root_path)  
 host = 'http://text.aliapi.hanvon.com'
 path = '/rt/ws/v1/ocr/text/recg'
 method = 'POST'
-appcode = '39f04e36453441bb95db5f907c07af21'    #汉王识别appcode（填你自己的）
-querys = 'code=74e51a88-41ec-413e-b162-bd031fe0407e'
+# appcode = '39f04e36453441bb95db5f907c07af21'
+# querys = 'code=74e51a88-41ec-413e-b162-bd031fe0407e'
+appcode = ''
+querys = ''
 bodys = {}
 url = host + path + '?' + querys
 
-im = Image.open(r"/Users/wuwei/images/screenshot.png")   
+
+im = Image.open(join(root_path,'screenshot.png'))
 
 img_size = im.size
 w = im.size[0]
 h = im.size[1]
 print("xx:{}".format(img_size))
 
-region = im.crop((70,200, w-70,700))    #裁剪的区域
-region.save("/Users/wuwei/images/crop_test1.png")
+region = im.crop((70,200, w-70,700))
+region.save(join(root_path, 'crop_test1.png'))
 
 
 
-f=open('/Users/wuwei/images/crop_test1.png','rb') 
+f=open(join(root_path, 'crop_test1.png'),'rb')
 ls_f=base64.b64encode(f.read())
 f.close()
 s = bytes.decode(ls_f) 
